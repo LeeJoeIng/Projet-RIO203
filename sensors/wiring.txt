@@ -29,3 +29,16 @@ GND  ------ GND
 SIG  ------ GPIO17 (/!\ conflit avec ultrasonic)
 
 ============================================
+
+=====Gyro acceleration sensor (MPU6050)=====
+
+/!\ problème de branchement (pas soudé)
+
+SENSOR <-> RASPBERRY
+
+VCC  ------ 5V0
+GND  ------ GND
+SCL  ------ SCL1 (/!\ conflit avec BMP280)
+SDA  ------ SDA1 (/!\ conflit avec BMP280)
+
+============================================
