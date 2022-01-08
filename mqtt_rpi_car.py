@@ -99,14 +99,14 @@ def read_fire():
    return payload
 
 while True:
-   publish.single(pub_topic1, read_temp, hostname = broker_address)
-   publish.single(pub_topic2, read_humidity, hostname = broker_address)
-   publish.single(pub_topic3, read_pressure, hostname = broker_address)
-   publish.single(pub_topic4, read_water, hostname = broker_address)
-   publish.single(pub_topic5, read_light, hostname = broker_address)
-   publish.single(pub_topic6, read_wind, hostname = broker_address)
-   publish.single(pub_topic7, read_tire, hostname = broker_address)
-   publish.single(pub_topic8, read_vitesse, hostname = broker_address)
-   publish.single(pub_topic9, read_fire, hostname = broker_address)
+   publish.single(pub_topic1, read_temp(), hostname = broker_address)
+   publish.single(pub_topic2, read_humidity(), hostname = broker_address)
+   publish.single(pub_topic3, read_pressure(), hostname = broker_address)
+   publish.single(pub_topic4, read_water(), hostname = broker_address)
+   publish.single(pub_topic5, read_light(), hostname = broker_address)
+   publish.single(pub_topic6, read_wind(), hostname = broker_address)
+   publish.single(pub_topic7, read_tire(), hostname = broker_address)
+   publish.single(pub_topic8, read_vitesse(), hostname = broker_address)
+   publish.single(pub_topic9, read_fire(), hostname = broker_address)
    print("Done")
    time.sleep(1 * 60)
