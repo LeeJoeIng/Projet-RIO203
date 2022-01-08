@@ -9,4 +9,23 @@ SDI  ------ SDA1
 
 ============================================
 
+=====Ultrasonic    sensor    (HC-SR04) =====
 
+SENSOR <-> RASPBERRY
+
+VCC  ------ 5V0
+GND  ------ GND
+ECHO ------ GPIO18
+TRIG ------ GPIO17
+
+============================================
+
+=====  Humiture    sensor     (DHT11)  =====
+
+SENSOR <-> RASPBERRY
+
+VCC  ------ 5V0
+GND  ------ GND
+SIG  ------ GPIO17 (/!\ conflit avec ultrasonic)
+
+============================================
