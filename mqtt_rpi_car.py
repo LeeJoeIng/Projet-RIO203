@@ -19,39 +19,84 @@ pub_topic9 = "sensor/fire"
 
 def read_temp():
    temperature = get_temperature() #random à modifier
-   return temperature
+   payload="{"
+   payload+="\"Temperature\":"
+   payload+=temperature
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_humidity():
    humidity = get_humidity() #random à modifier
-   return humidity
+   payload="{"
+   payload+="\"Humidity\":"
+   payload+=humidity
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_pressure():
    pressure = get_pressure() #random à modifier
-   return pressure
+   payload="{"
+   payload+="\"Pressure\":"
+   payload+=pressure
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_water():
    water = get_water() #random à modifier
-   return water
+   payload="{"
+   payload+="\"Water\":"
+   payload+=water
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_light():
    light = get_light() #random à modifier
-   return light
+   payload="{"
+   payload+="\"Light\":"
+   payload+=light
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_wind():
    wind = get_wind() #random à modifier
-   return wind
+   payload="{"
+   payload+="\"Wind\":"
+   payload+=wind
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_tire():
    tire = sense.get_tire() #random à modifier
-   return tire
+   payload="{"
+   payload+="\"Tire\":"
+   payload+=tire
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_vitesse():
    vitesse = sense.get_vitesse() #random à modifier
-   return vitesse
+   payload="{"
+   payload+="\"Vitesse\":"
+   payload+=vitesse
+   payload+=";"
+   payload+="}"
+   return payload
 
 def read_fire():
    fire = sense.get_fire() #random à modifier
-   return fire
+   payload="{"
+   payload+="\"Fire\":"
+   payload+=fire
+   payload+=";"
+   payload+="}"
+   return payload
 
 while True:
    publish.single(pub_topic1, read_temp, hostname = broker_address)
