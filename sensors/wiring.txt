@@ -1,0 +1,12 @@
+=====Barometer and thermometer (BMP280)=====
+
+SENSOR <-> RASPBERRY
+
+3.3V ------ 3V3
+GND  ------ GND
+SCK  ------ SCL1
+SDI  ------ SDA1
+
+============================================
+
+
