@@ -1,4 +1,5 @@
 #!/bin/bash
+# Script pour récupérer la consommation et le voltage de chaque noeud
 
 while true
 do

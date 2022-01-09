@@ -1,4 +1,6 @@
 # !/bin/bash
+# Script modifié pour récupérer les données sur Fit IoT
+
 while true
 do
 	# Pi constant
