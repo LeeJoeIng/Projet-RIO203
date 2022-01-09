@@ -1,27 +1,31 @@
 import paho.mqtt.client as mqtt
+import paho.mqtt.publish as publish
 import os
 import json
 import time
 from datetime import datetime
+import sys
 
-# tokens of devices (à modifier)
-ACCESS_TOKEN1 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN2 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN3 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN4 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN5 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN6 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN7 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN8 = 'NN7QEiWaX6mxPRnVdJsQ'
-ACCESS_TOKEN9 = 'NN7QEiWaX6mxPRnVdJsQ'
+#Tokens of devices (à modifier)
+ACCESS_TOKEN1 = 'LoRfm9w6DmefqMPJQNIw'
+ACCESS_TOKEN2 = 's3tAkxJqaixrBBo0ae5S'
+ACCESS_TOKEN3 = 'WK4sEyaEyPUG3nH0IfEP'
+ACCESS_TOKEN4 = 'NwxpOjNhhBtqQrgzTtFE'
+ACCESS_TOKEN5 = 'F8lNcq13Z95uDl6idAFC'
+ACCESS_TOKEN6 = 'pHaaYN1iqnrYvUpGyTbt'
+ACCESS_TOKEN7 = 'vmWsSYMqGg8AGCiamhM9'
+ACCESS_TOKEN8 = '71L19crdoHQQxnmvMq9Q'
+ACCESS_TOKEN9 = 'FURtysDavzwGhPCmGI7Q'
 
-# broker rpiserver - thingsboard
-#broker_thingsboard = "demo.thingsboard.io"
+mqtt_topic_TB = "v1/devices/me/telemetry"
 
-# data listening port
+#broker rpiserver - thingsboard
+broker_thingsboard = "localhost"
+
+#data listening port
 port = 1883
 
-# broker rpiserver - rpicar
+#broker rpiserver - rpicar
 #broker_address = "137.194.218.9"
 broker_address = "test.mosquitto.org"
 
@@ -57,58 +61,89 @@ def on_connect(client, userdata, flags, rc):
 # when receiving a mqtt message do this;
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
-   message = str(msg.payload)
+   message = msg.payload
+   message = ''.join(map(chr,message))
    print(msg.topic + " " + message)
 
    if msg.topic == sub_topic1:
-       print("Received message #1, do something")
-       client.username_pw_set(ACCESS_TOKEN1)               #access token from thingsboard device
-       # Do something
+       global payload1
+       payload1 = message
+       print("Received message #1")
+       mqtt_auth = { 'username': ACCESS_TOKEN1 }
+       publish.single(mqtt_topic_TB, payload1, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
 
-    if msg.topic == sub_topic2:
-        print("Received message #2, do something else")
-        client.username_pw_set(ACCESS_TOKEN2)
-        # Do something else
+   if msg.topic == sub_topic2:
+       global payload2
+       payload2 = message
+       print("Received message #2")
+       mqtt_auth = { 'username': ACCESS_TOKEN2 }
+       publish.single(mqtt_topic_TB, payload2, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload2);
 
-    if msg.topic == sub_topic3:
-        print("Received message #3, do something")
-        client.username_pw_set(ACCESS_TOKEN3)
-        # Do something
+   if msg.topic == sub_topic3:
+       global payload3
+       payload3 = message
+       print("Received message #3")
+       mqtt_auth = { 'username': ACCESS_TOKEN3 }
+       publish.single(mqtt_topic_TB, payload3, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload3);
 
    if msg.topic == sub_topic4:
-       print("Received message #4, do something")
-       client.username_pw_set(ACCESS_TOKEN4)
-       # Do something
+       global payload4
+       payload4 = message
+       print("Received message #4")
+       mqtt_auth = { 'username': ACCESS_TOKEN4 }
+       publish.single(mqtt_topic_TB, payload4, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload4);
 
    if msg.topic == sub_topic5:
-       print("Received message #5, do something")
-       client.username_pw_set(ACCESS_TOKEN5)
-       # Do something
+       global payload5
+       payload5 = message
+       print("Received message #5")
+       mqtt_auth = { 'username': ACCESS_TOKEN5 }
+       publish.single(mqtt_topic_TB, payload5, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload5);
 
    if msg.topic == sub_topic6:
-       print("Received message #6, do something")
-       client.username_pw_set(ACCESS_TOKEN6)
-       # Do something
+       global payload6
+       payload6 = message
+       print("Received message #6")
+       mqtt_auth = { 'username': ACCESS_TOKEN6 }
+       publish.single(mqtt_topic_TB, payload6, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload6);
 
    if msg.topic == sub_topic7:
-       print("Received message #7, do something")
-       client.username_pw_set(ACCESS_TOKEN7)
-       # Do something
+       global payload7
+       payload7 = message
+       print("Received message #7")
+       mqtt_auth = { 'username': ACCESS_TOKEN7 }
+       publish.single(mqtt_topic_TB, payload7, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload7);
 
    if msg.topic == sub_topic8:
-       print("Received message #8, do something")
-       client.username_pw_set(ACCESS_TOKEN8)
-       # Do something
+       global payload8
+       payload8 = message
+       print("Received message #8")
+       mqtt_auth = { 'username': ACCESS_TOKEN8 }
+       publish.single(mqtt_topic_TB, payload8, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload8);
 
    if msg.topic == sub_topic9:
-       print("Received message #9, do something")
-       client.username_pw_set(ACCESS_TOKEN9)  
-       # Do something
-
-   ret = client.publish("v1/devices/me/telemetry",message) #topic-v1/devices/me/telemetry
-   print("Please check LATEST TELEMETRY field of your device")
-   print(ret);
-   
+       global payload9
+       payload9 = message
+       print("Received message #9")
+       mqtt_auth = { 'username': ACCESS_TOKEN9 }
+       publish.single(mqtt_topic_TB, payload9, hostname = broker_thingsboard, auth = mqtt_auth)
+       print("Please check LATEST TELEMETRY field of your device")
+       print(payload9);
 # create function for callback
 def on_publish(client,userdata,result):
     print("data published to thingsboard \n")
@@ -118,9 +153,8 @@ def on_publish(client,userdata,result):
 client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
-client.on_publish = on_publish
-
 client.connect(broker_address, port, 60)
 
-# Process network traffic and dispatch callbacks. This will also handle reconnecting.
+# Process network traffic and dispatch callbacks. This will also handle
+# reconnecting.
 client.loop_forever()
