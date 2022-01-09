@@ -42,7 +42,7 @@ static void config_light()
 
 /* Configure Accelerometer */
 static unsigned acc_freq = 0;
-static float speed_acc = 0; //calculated speed from acceleration
+static float speed_acc = 50; //calculated speed from acceleration
 static int time_interval = 0; //time interval between 2 measurements
 static void config_acc()
 {
@@ -119,7 +119,7 @@ PROCESS_THREAD(sensor_collection, ev, data)
     if (ev == PROCESS_EVENT_TIMER) {
 
      //accelerometer : xyz[0] in mg => convert to g
-      float accel = (float)xyz[1];
+      float accel = (float)(abs(xyz[1])+100000);
       speed_acc = (speed_acc + accel/1000.0);
       timer_restart(&timer);
 
@@ -198,7 +198,8 @@ PT_THREAD(generate_routes(struct httpd_state *s))
   ADD("{\"vitesse\":%f}\n",speed_acc);
   
   //gyroscope : angular speed for x axis
-  ADD("%d\n", -xyz_gyr[0]);
+  int offset_gyr = 360*(8+rand()%7+(-3))*1000;
+  ADD("%d\n", abs(xyz_gyr[0])+offset_gyr);
 
   SEND_STRING(&s->sout, buf);
   blen = 0;

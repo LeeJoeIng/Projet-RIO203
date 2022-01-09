@@ -37,12 +37,12 @@ do
 
 	# Calculate speed from angular speed
 	# angular peed in m°/s => convert to °/s
-	# Wheel radius = 0.2032
+	# Wheel radius = 0.29545
 	# user 1
-	vitesse_gyr_u1=$(echo $vitesse_ang_x_u1/1000*$pi*2*$pi*2032/10000/180|bc -l)
+	vitesse_gyr_u1=$(echo $vitesse_ang_x_u1/1000*$pi/180*29545/100000*36/10|bc -l)
 	
 	# user 2
-	vitesse_gyr_u2=$(echo $vitesse_ang_x_u2/1000*$pi*2*$pi*2032/10000/180|bc -l)
+	vitesse_gyr_u2=$(echo $vitesse_ang_x_u2/1000*$pi/180*29545/100000*36/10|bc -l)
 	
 	# Check speed
 	echo "$vitesse_gyr_u1"
