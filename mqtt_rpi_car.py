@@ -1,5 +1,7 @@
 import paho.mqtt.publish as publish
+
 import time
+import random
 
 #broker_address = "137.194.218.9"
 broker_address = "test.mosquitto.org"
@@ -18,95 +20,86 @@ pub_topic9 = "sensor/fire"
 # # # # # # # # # # # # # # # GPIO inputs # # # # # # # # # # # # # # # # # #
 
 def read_temp():
-   temperature = get_temperature() #random à modifier
+   temperature = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Temperature\":"
    payload+=temperature
-   payload+=";"
    payload+="}"
    return payload
 
 def read_humidity():
-   humidity = get_humidity() #random à modifier
+   humidity = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Humidity\":"
    payload+=humidity
-   payload+=";"
    payload+="}"
    return payload
 
 def read_pressure():
-   pressure = get_pressure() #random à modifier
+   pressure = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Pressure\":"
    payload+=pressure
-   payload+=";"
    payload+="}"
    return payload
 
 def read_water():
-   water = get_water() #random à modifier
+   water = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Water\":"
    payload+=water
-   payload+=";"
    payload+="}"
    return payload
 
 def read_light():
-   light = get_light() #random à modifier
+   light = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Light\":"
    payload+=light
-   payload+=";"
    payload+="}"
    return payload
 
 def read_wind():
-   wind = get_wind() #random à modifier
+   wind = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Wind\":"
    payload+=wind
-   payload+=";"
    payload+="}"
    return payload
 
 def read_tire():
-   tire = sense.get_tire() #random à modifier
+   tire = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Tire\":"
    payload+=tire
-   payload+=";"
    payload+="}"
    return payload
 
 def read_vitesse():
-   vitesse = sense.get_vitesse() #random à modifier
+   vitesse = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Vitesse\":"
    payload+=vitesse
-   payload+=";"
    payload+="}"
    return payload
 
 def read_fire():
-   fire = sense.get_fire() #random à modifier
+   fire = str(random.randint(0,100)) #random modifier
    payload="{"
    payload+="\"Fire\":"
    payload+=fire
-   payload+=";"
    payload+="}"
    return payload
 
 while True:
-   publish.single(pub_topic1, read_temp(), hostname = broker_address)
-   publish.single(pub_topic2, read_humidity(), hostname = broker_address)
-   publish.single(pub_topic3, read_pressure(), hostname = broker_address)
-   publish.single(pub_topic4, read_water(), hostname = broker_address)
-   publish.single(pub_topic5, read_light(), hostname = broker_address)
-   publish.single(pub_topic6, read_wind(), hostname = broker_address)
-   publish.single(pub_topic7, read_tire(), hostname = broker_address)
-   publish.single(pub_topic8, read_vitesse(), hostname = broker_address)
-   publish.single(pub_topic9, read_fire(), hostname = broker_address)
-   print("Done")
-   time.sleep(1 * 60)
+    publish.single(pub_topic1, read_temp(), hostname = broker_address)
+    publish.single(pub_topic2, read_humidity(), hostname = broker_address)
+    publish.single(pub_topic3, read_pressure(), hostname = broker_address)
+    publish.single(pub_topic4, read_water(), hostname = broker_address)
+    publish.single(pub_topic5, read_light(), hostname = broker_address)
+    publish.single(pub_topic6, read_wind(), hostname = broker_address)
+    publish.single(pub_topic7, read_tire(), hostname = broker_address)
+    publish.single(pub_topic8, read_vitesse(), hostname = broker_address)
+    publish.single(pub_topic9, read_fire(), hostname = broker_address)
+    print("Done")
+    time.sleep(10)
