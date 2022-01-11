@@ -12,6 +12,7 @@
 #!/usr/bin/env python3
 import RPi.GPIO as GPIO
 import time
+import random
 
 DHTPIN = 17
 
@@ -116,20 +117,13 @@ def read_dht11_dat():
 
 	return the_bytes[0], the_bytes[2]
 
-def main():
-	print ("Raspberry Pi wiringPi DHT11 Temperature test program\n")
-	while True:
-		result = read_dht11_dat()
-		if result:
-			humidity, temperature = result
-			print ("humidity: %s %%,  Temperature: %s C`" % (humidity, temperature))
-		time.sleep(1)
-
-def destroy():
-	GPIO.cleanup()
-
-if __name__ == '__main__':
-	try:
-		main()
-	except KeyboardInterrupt:
-		destroy() 
+def get_humidity(has_humidity):
+    if has_humidity:
+        result = read_dht11_dat()
+        if result:
+            humidity, temperature = result
+        else:
+            humidity = "error humidity"
+            print("error humidity")
+        return str(humidity)
+    return str(random.randint(0,100))

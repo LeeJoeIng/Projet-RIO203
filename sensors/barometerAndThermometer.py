@@ -245,3 +245,17 @@ def get_temp(has_temp):
             print("Version     : %d" % chip_version)
         return str(temperature)
     return str(random.randint(0,100))
+
+def get_pressure(has_pressure):
+    if has_pressure:
+        chip_id, chip_version = bmp.read_id()
+        if chip_id == 88:
+            
+            bmp.reg_check()
+            temperature, pressure = bmp.read()
+        else:
+            print("Error TEMPERATURE, PRESSURE")
+            print("Chip ID     : %d" % chip_id)
+            print("Version     : %d" % chip_version)
+        return str(pressure)
+    return str(random.randint(0,100))

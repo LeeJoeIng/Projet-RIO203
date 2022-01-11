@@ -3,7 +3,9 @@ import paho.mqtt.publish as publish
 import time
 import random
 
-from sensors.barometerAndThermometer import *
+from sensors.barometerAndThermometer import get_temp,get_pressure
+from sensors.humiture_sensor import get_humidity
+from sensors.notyet import *
 
 #broker_address = "137.194.218.9"
 broker_address = "test.mosquitto.org"
@@ -23,7 +25,7 @@ pub_topic9 = "sensor/fire"
 
 # Mettre uniquement les capteurs branchés sur True
 
-has_temp = True
+has_temp = False
 has_humidity = False
 has_pressure = False
 has_water = False
@@ -42,7 +44,7 @@ def read_temp():
     payload+=temperature
     payload+="}"
     return payload
-"""
+
 def read_humidity():
     humidity = get_humidity(has_humidity)
     payload="{"
@@ -106,9 +108,7 @@ def read_fire():
     payload+=fire
     payload+="}"
     return payload
-"""
-print(read_temp())
-"""
+
 while True:
     publish.single(pub_topic1, read_temp(), hostname = broker_address)
     publish.single(pub_topic2, read_humidity(), hostname = broker_address)
@@ -121,4 +121,3 @@ while True:
     publish.single(pub_topic9, read_fire(), hostname = broker_address)
     print("Done")
     time.sleep(10)
-"""
