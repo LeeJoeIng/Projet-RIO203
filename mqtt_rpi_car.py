@@ -6,6 +6,8 @@ import random
 from sensors.barometerAndThermometer import get_temp,get_pressure
 from sensors.humiture_sensor import get_humidity
 from sensors.notyet import *
+from sensors.light import get_light
+from sensors.water import get_water
 
 #broker_address = "137.194.218.9"
 broker_address = "test.mosquitto.org"
@@ -25,11 +27,11 @@ pub_topic9 = "sensor/fire"
 
 # Mettre uniquement les capteurs branchés sur True
 
-has_temp = False
-has_humidity = False
-has_pressure = False
-has_water = False
-has_light = False
+has_temp = True
+has_humidity = True
+has_pressure = True
+has_water = True
+has_light = True
 has_wind = False
 has_tire = False
 has_vitesse = False
@@ -39,6 +41,7 @@ has_fire = False
 
 def read_temp():
     temperature = get_temp(has_temp)
+    print("Temperature= ",temperature)
     payload="{"
     payload+="\"Temperature\":"
     payload+=temperature
@@ -47,6 +50,7 @@ def read_temp():
 
 def read_humidity():
     humidity = get_humidity(has_humidity)
+    print("Humidity= ", humidity)
     payload="{"
     payload+="\"Humidity\":"
     payload+=humidity
@@ -55,6 +59,7 @@ def read_humidity():
 
 def read_pressure():
     pressure = get_pressure(has_pressure)
+    print("Pressure= ", pressure)
     payload="{"
     payload+="\"Pressure\":"
     payload+=pressure
@@ -63,6 +68,7 @@ def read_pressure():
 
 def read_water():
     water = get_water(has_water)
+    print("Water= ", water)
     payload="{"
     payload+="\"Water\":"
     payload+=water
@@ -71,6 +77,7 @@ def read_water():
 
 def read_light():
     light = get_light(has_light)
+    print("light= ", light)
     payload="{"
     payload+="\"Light\":"
     payload+=light
@@ -79,6 +86,7 @@ def read_light():
 
 def read_wind():
     wind = get_wind(has_wind)
+    print("Wind= ", wind)
     payload="{"
     payload+="\"Wind\":"
     payload+=wind
@@ -87,6 +95,7 @@ def read_wind():
 
 def read_tire():
     tire = get_tire(has_tire)
+    print("Tire= ", tire)
     payload="{"
     payload+="\"Tire\":"
     payload+=tire
@@ -95,6 +104,7 @@ def read_tire():
 
 def read_vitesse():
     vitesse = get_vitesse(has_vitesse)
+    print("Speed= ", vitesse)
     payload="{"
     payload+="\"Vitesse\":"
     payload+=vitesse
@@ -103,6 +113,7 @@ def read_vitesse():
 
 def read_fire():
     fire = get_fire(has_fire)
+    print("fire= ", fire)
     payload="{"
     payload+="\"Fire\":"
     payload+=fire
