@@ -1,0 +1,12 @@
+Pour activer le wifi, il faut faire, étant connecté à un écran:
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+Puis on ajoute le nouveau wifi auquel on souhaite se connecter comme suit:
+network={
+ scan_ssid=1
+ ssid="nomDuWifi"
+ psk="MotdePasse"
+}
+
+Voir tuto:https://raspberry-pi.fr/connecter-wifi-raspberry-pi-3/
+
+

@@ -1,0 +1,15 @@
+user: pi
+password: yagami
+IP adress: 137.194.154.153
+Broadcast:137.194.255.255
+Masque:255.255.0.0
+
+user:pi
+password:
+
+
+connect raspberry sur le mur
+ssh barry-21@ssh.enst.fr
+ssh pi@???
+
+

@@ -1,0 +1,6 @@
+Ouvrir VScode
+Installer l'extension Remote-ssh
+Pour ajouter une raspberry je fais dans VScode ctrl+shift+p puis sélectionner Remote-ssh:Add new host. 
+renseigner ssh -Y -J barry-21@ssh.enst.fr pi@137.194.218.9 
+mettre les 2 mots de passe
+Puis faire ctrl+shift+p et sélectionner Remote-ssh:Connect to host choisir l'adresse IP de la raspberry à laquelle tu souhaite te connecter. Puis appuyer sur l'onglet explorer (en haut à gauche) de la nouvelle fenêtre qui s'ouvre puis open folder et là on a accès à tout les fichiers sur la raspberry. On peut éditer, sauvegarder, enregistrer...
