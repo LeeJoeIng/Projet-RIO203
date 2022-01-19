@@ -1,5 +1,5 @@
 #!/usr/bin/python 
-#pour télécharger un paquet sur window :  py -m pip install NomDuPaquet
+#pour télécharger un paquet sur windows :  py -m pip install NomDuPaquet
 
 import json
 import time
@@ -45,21 +45,21 @@ tabValue = np.array(tabValue, dtype=object) #conversion de la liste en array
 #création de la dataframe
 dataframe = pd.DataFrame(data=tabValue, index=list(range(len(tabValue))), columns=fieldsArray)
 
-first_time=True
 #Algo pour envoyer chaque donnée toutes les secondes
+first_time = True
 for i in range(len(valuesArray)) : 
     print("*********************************")
     print("Temps=" + str(i) + "s, position : "          + str((dataframe.loc[i, 'latlng'].values[0])))
-    print("Temps=" + str(i) + "s, elevation : "         + str(float(dataframe.loc[i, 'elevation'].values)))
-    print("Temps=" + str(i) + "s, vitesse : "           + str(float(dataframe.loc[i, 'speed'].values)) + "km/h")
-    print("Temps=" + str(i) + "s, distance parcouru : " + str(int(dataframe.loc[i, 'distance'].values)) + "m")
+    print("Temps=" + str(i) + "s, elevation : "         + str(float(dataframe.loc[i, 'elevation'].values)) + "m")
+    print("Temps=" + str(i) + "s, vitesse : "           + str(float(dataframe.loc[i, 'speed'].values))     + "km/h")
+    print("Temps=" + str(i) + "s, distance parcouru : " + str(int(dataframe.loc[i, 'distance'].values))    + "m")
     if first_time==False :
-        vitesseActuel=float(dataframe.loc[i, 'speed'].values)*1000 #en m
+        vitesseActuel = float(dataframe.loc[i, 'speed'].values)*1000 #en m
         accel = (vitesseActuel - vitessePrecedente)/3600
         print("Temps=" + str(i) + "s, acceleration : "  + str(accel) + "m/s²")
     else :
-        first_time=False
-    vitessePrecedente=float(dataframe.loc[i, 'speed'].values)*1000 #en m
+        first_time = False
+    vitessePrecedente = float(dataframe.loc[i, 'speed'].values)*1000 #en m
     time.sleep(1)
 
 
