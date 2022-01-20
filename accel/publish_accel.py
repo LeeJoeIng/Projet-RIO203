@@ -36,24 +36,12 @@ dataValues = data['values']
 
 #create dataframe
 dataframe = pd.DataFrame(data=dataValues, index=list(range(len(dataValues))), columns=dataFields)
+dataframe['time']=pd.to_datetime(dataframe['time'],unit='s')
 
-# Declare a list that is to be converted into a column
-acceleration = []
+dataframe['acceleration'] =dataframe['speed'].diff() #car il y a un relevé par seconde et la vitesse en en m/s
+dataframe.loc[dataframe['acceleration'].isna()==True,'acceleration']=0 #Vérifie qu'aucune valeur ne soit NAN
 
-#Algo pour envoyer chaque donnée toutes les secondes
-first_time = True
-for i in range(len(dataframe)) :
-    if first_time==False :
-        vitesseActuel = float(dataframe.loc[i, 'speed'])*1000 #en m
-        accel = (vitesseActuel - vitessePrecedente)/3600
-        acceleration.append(str(accel))
-
-    else :
-        first_time = False
-        acceleration.append('0')
-    vitessePrecedente = float(dataframe.loc[i, 'speed'])*1000 #en m
-
-for j in range(len(acceleration)) :
+for j in range(len(dataframe['acceleration'])) :
     publish.single(pub_topic1, read_accel(j), hostname = broker_address)
     print("Done")
     time.sleep(1)
