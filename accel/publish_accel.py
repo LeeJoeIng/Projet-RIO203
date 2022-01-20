@@ -17,7 +17,6 @@ def read_accel(i):
    payload="{"
    payload+="\"Acceleration\":"
    payload+=str(accel)
-   payload+=";"
    payload+="}"
    print(payload)
    return payload
