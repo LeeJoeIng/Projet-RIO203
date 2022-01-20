@@ -19,37 +19,26 @@ dataValues = data['values']
 
 dataframe = pd.DataFrame(data=dataValues, index=list(range(len(dataValues))), columns=dataFields)
 pd.set_option("display.max_rows", None, "display.max_columns", None)
-
+dataframe['time']=pd.to_datetime(dataframe['time'],unit='s') #converti le temps en donnée en datetime
 #print(dataframe.head(5))
 
-# Declare a list that is to be converted into a column
-acceleration = []
+
 #print(len(dataValues)) 
 
 #Algo pour envoyer chaque donnée toutes les secondes
-first_time = True
-for i in range(len(dataframe)) : 
+
+# for i in range(len(dataframe)) : 
     #print("*********************************")
     #print("Temps=" + str(i) + "s, position : "          + str((dataframe.loc[i, 'latlng'])))
     #print("Temps=" + str(i) + "s, elevation : "         + str(float(dataframe.loc[i, 'elevation'])) + "m")
     #print("Temps=" + str(i) + "s, vitesse : "           + str(float(dataframe.loc[i, 'speed']))     + "km/h")
     #print("Temps=" + str(i) + "s, distance parcouru : " + str(int(dataframe.loc[i, 'distance']))    + "m")
-    if first_time==False :
-        vitesseActuel = float(dataframe.loc[i, 'speed'])*1000 #en m
-        accel = (vitesseActuel - vitessePrecedente)/3600
-        #print("Temps=" + str(i) + "s, acceleration : "  + str(accel) + "m/s²")
-        acceleration.append(str(accel))
-
-    else :
-        first_time = False
-        acceleration.append('0')
-    vitessePrecedente = float(dataframe.loc[i, 'speed'])*1000 #en m
    # time.sleep(1)
 
-# Using 'acceleration' as the column name
-# and equating it to the list
-dataframe['acceleration'] = acceleration
-#print(acceleration)
+
+dataframe['acceleration'] =dataframe['speed'].diff() #car il y a un relevé par seconde et la vitesse en en m/s
+dataframe.loc[dataframe['acceleration'].isna()==True,'acceleration']=0 #Vérifie qu'aucune valeur ne soit NAN
 #print(dataframe[['time','acceleration']])
 #print(dataframe.head(5))
-print(dataframe.iloc[:,[0,8]].head(5))
+dataframe=dataframe.loc[:,['time','latlng','speed','acceleration']] #création d'un dataframe avec uniquement les données utiles
+dataframe
