@@ -16,7 +16,7 @@ def read_accel(i):
    accel = dataframe.loc[i,'acceleration'] #random modifier
    payload="{"
    payload+="\"Acceleration\":"
-   payload+=accel
+   payload+=str(accel)
    payload+=";"
    payload+="}"
    print(payload)
