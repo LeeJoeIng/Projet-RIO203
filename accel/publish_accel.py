@@ -13,7 +13,7 @@ pub_topic1 = "rio203/accelerationFromJSON"
 # # # # # # # # # # # # # # # Preparing payload # # # # # # # # # # # # # # # # # #
 
 def read_accel(i):
-   accel = acceleration[i] #random modifier
+   accel = dataframe.loc[i,'acceleration'] #random modifier
    payload="{"
    payload+="\"Acceleration\":"
    payload+=accel
