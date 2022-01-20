@@ -131,4 +131,4 @@ while True:
     publish.single(pub_topic8, read_vitesse(), hostname = broker_address)
     publish.single(pub_topic9, read_fire(), hostname = broker_address)
     print("Done")
-    time.sleep(10)
+    time.sleep(5)
