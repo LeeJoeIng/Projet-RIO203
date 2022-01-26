@@ -68,7 +68,7 @@ def on_message(client, userdata, msg):
        global payload3
        payload3=message
        payload3_int=json.loads(payload3)
-       long.append(float(payload3_int["Longitude"]))
+       long.append(float(payload3_int["Longtitude"]))
        print("Received message #3")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload3, hostname = broker_thingsboard, auth = mqtt_auth)
