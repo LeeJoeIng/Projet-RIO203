@@ -21,7 +21,7 @@ def iso2datetime(obj):
 
 
 records = []
-with open('Fichiers/Sortie_v_lo_matinale.json', 'r') as f:
+with open('Fichiers/trace_trajet4.json', 'r') as f:
     for d in f.readlines():
         records.append(json.loads(d, object_pairs_hook=iso2datetime))
         
@@ -47,20 +47,25 @@ dataframe = pd.DataFrame(data=tabValue, index=list(range(len(tabValue))), column
 
 #Algo pour envoyer chaque donnée toutes les secondes
 first_time = True
+tabVitesse = []
 for i in range(len(valuesArray)) : 
     print("*********************************")
+    vitesseActuel = int(dataframe.loc[i, 'speed'].values) #en m/s
     print("Temps=" + str(i) + "s, position : "          + str((dataframe.loc[i, 'latlng'].values[0])))
-    print("Temps=" + str(i) + "s, elevation : "         + str(float(dataframe.loc[i, 'elevation'].values)) + "m")
-    print("Temps=" + str(i) + "s, vitesse : "           + str(float(dataframe.loc[i, 'speed'].values))     + "km/h")
+    print("Temps=" + str(i) + "s, elevation : "         + str(int(dataframe.loc[i, 'elevation'].values))   + "m")
+    print("Temps=" + str(i) + "s, vitesse : "           + str(int(vitesseActuel*3.6))                      + "km/h")
     print("Temps=" + str(i) + "s, distance parcouru : " + str(int(dataframe.loc[i, 'distance'].values))    + "m")
+    tabVitesse.append(int(vitesseActuel*3.6))
     if first_time==False :
-        vitesseActuel = float(dataframe.loc[i, 'speed'].values)*1000 #en m
         accel = (vitesseActuel - vitessePrecedente)/3600
         print("Temps=" + str(i) + "s, acceleration : "  + str(accel) + "m/s²")
     else :
         first_time = False
-    vitessePrecedente = float(dataframe.loc[i, 'speed'].values)*1000 #en m
-    time.sleep(1)
+    vitessePrecedente = int(dataframe.loc[i, 'speed'].values) #en m
+    #time.sleep(1)
+    
+print("tabVitesse final : " + str(tabVitesse)) 
+
 
 
 
