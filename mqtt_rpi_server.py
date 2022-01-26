@@ -79,7 +79,7 @@ def on_message(client, userdata, msg):
        global payload4
        payload4=message
        payload4_int=json.loads(payload4)
-       speed.append(float(payload2_int["Speed"]))
+       speed.append(float(payload4_int["Speed"]))
        print("Received message #4")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload4, hostname = broker_thingsboard, auth = mqtt_auth)
