@@ -28,7 +28,7 @@ lat=[]
 long=[]
 seat_belt=[]
 acc=[]
-ultasonic=[]
+ultrasonic=[]
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code " + str(rc))
