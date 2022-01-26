@@ -96,7 +96,6 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic5:
        global payload5
        payload5 = message
-       payload5_int=json.loads(payload5)
        if(payload5_int["Status"]=='Stop'):
          print(dataframe)
        print("Received message #5")
