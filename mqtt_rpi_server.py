@@ -96,7 +96,7 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic5:
        global payload5
        payload5 = message
-       if(payload5_int["Status"]=='Stop'):
+       if(payload5=='Stop'):
          print(dataframe)
        print("Received message #5")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
