@@ -1,5 +1,5 @@
 data=dataframe.loc[:,['time','speed','acceleration']]
-data['capteur_dist']=[random.randrange(0,50) for i in range(len(data['time']))]
+data['capteur_dist']=[random.randrange(0,50) for i in range(len(data['time']))]#génère la distance de façon random
 
 data['dist_s']=data['capteur_dist']/data['speed'] # Calcul de la distance en seconde 
 data['acc_pb']=data['acceleration'].loc[(data['acceleration']>= 4.5) | (data['acceleration']<=- 4.5)]# détermination des accélération hors de l'intervalle [-4.5,4.5]
