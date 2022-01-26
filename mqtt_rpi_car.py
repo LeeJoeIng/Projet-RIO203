@@ -4,6 +4,8 @@ import json
 import time
 import pandas as pd
 import paho.mqtt.publish as publish
+from sensors.potentiometer import get_ceinture
+from sensors.ultrasonic import timeAndDistance
 
 broker_address = "test.mosquitto.org"
 
@@ -13,6 +15,8 @@ pub_topic2 = "rio203/latitudeFromJSON"
 pub_topic3 = "rio203/longitudeFromJSON"
 pub_topic4 = "rio203/speedFromJSON"
 pub_topic5 = "rio203/status"
+pub_topic6 = "rio203/seatbelt"
+pub_topic7 = "rio203/ultrasonic"
 
 # # # # # # # # # # # # # # # Preparing payload # # # # # # # # # # # # # # # # # #
 
@@ -52,6 +56,22 @@ def read_longtitude(i):
    #print(payload)
    return payload
 
+def read_seatbelt(seatbelt):
+   payload="{"
+   payload+="\"Seatbelt\":"
+   payload+=str(seatbelt)
+   payload+="}"
+   return payload
+
+def read_ultrasonic():
+   time, distance = timeAndDistance()
+   distance = distance / 100
+   payload="{"   
+   payload+="\"Ultrasonic\":"
+   payload+=str(distance)  
+   payload+="}"  
+   return payload 
+
 def read_status(str):
    status = str
    payload="{"
@@ -82,6 +102,10 @@ dataframe.loc[dataframe['acceleration'].isna()==True,'acceleration']=0 #Vérifie
 #mention that the session is started
 publish.single(pub_topic5, read_status("On route"), hostname = broker_address)
 
+#initiate value for seatbelt
+seatbelt = get_ceinture()
+publish.single(pub_topic6, read_seatbelt(seatbelt), hostname = broker_address)
+
 #publish messages to Rpi server
 for j in range(len(dataframe['acceleration'])) :
 #for j in range(5) :
@@ -89,6 +113,13 @@ for j in range(len(dataframe['acceleration'])) :
     publish.single(pub_topic2, read_latitude(j), hostname = broker_address)
     publish.single(pub_topic3, read_longtitude(j), hostname = broker_address)
     publish.single(pub_topic4, read_speed(j), hostname = broker_address)
+    publish.single(pub_topic7, read_ultrasonic(), hostname = broker_address)
+
+    #checking if seatbelt value is different
+    new_seatbelt = get_ceinture()
+    if new_seatbelt != seatbelt:
+        seatbelt = new_seatbelt
+        publish.single(pub_topic6, read_seatbelt(), hostname = broker_address)
 
     print("Done")
 #    time.sleep(1)
