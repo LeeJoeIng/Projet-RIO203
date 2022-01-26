@@ -116,12 +116,13 @@ def on_message(client, userdata, msg):
        publish.single(mqtt_topic_TB, payload7, hostname = broker_thingsboard, auth = mqtt_auth)
        print("Please check LATEST TELEMETRY field of your device")
        print(payload7)
-   dataframe=pd.DataFrame({'lat':lat,
-                           'long':long,
-                           'seat_belt':seat_belt,
-                           'speed':speed,
-                           'acc':acc,
-                           'distance':ultrasonic})
+   
+dataframe=pd.DataFrame({'lat':lat,
+                        'long':long,
+                        'seat_belt':seat_belt,
+                        'speed':speed,
+                        'acc':acc,
+                        'distance':ultrasonic})
 print(dataframe)                       
 # Create an MQTT client and attach our routines to it.
 client = mqtt.Client()
