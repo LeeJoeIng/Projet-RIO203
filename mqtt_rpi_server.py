@@ -77,7 +77,7 @@ def on_message(client, userdata, msg):
 
    if msg.topic == sub_topic4:
        global payload4
-       payload4)message
+       payload4=message
        payload4=json.loads(payload4)
        speed.append(payload2["Speed"])
        print("Received message #4")
