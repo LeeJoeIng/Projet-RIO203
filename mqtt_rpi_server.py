@@ -23,7 +23,12 @@ sub_topic4 = "rio203/speedFromJSON"
 sub_topic5 = "rio203/status"
 sub_topic6 = "rio203/seatbelt"
 sub_topic7 = "rio203/ultrasonic"
-
+speed=[]
+lat=[]
+long=[]
+seat_belt=[]
+acc=[]
+ultasonic=[]
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code " + str(rc))
@@ -39,16 +44,20 @@ def on_message(client, userdata, msg):
    message = msg.payload
    message = ''.join(map(chr,message))
    print(msg.topic + " " + message)
-
+   
    if msg.topic == sub_topic1:
        global payload1
        payload1 = message
+       payload1=json.loads(payload1)
+       acc.append(payload1["Acceleration"])
        print("Received message #1")
        print(payload1)
 
    if msg.topic == sub_topic2:
        global payload2
        payload2 = message
+       payload2=json.loads(payload2)
+       lat.append(payload2["Latitude"])
        print("Received message #2")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload2, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -57,7 +66,9 @@ def on_message(client, userdata, msg):
 
    if msg.topic == sub_topic3:
        global payload3
-       payload3 = message
+       payload3=message
+       payload3=json.loads(payload3)
+       long.append(payload3["Longitude"])
        print("Received message #3")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload3, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -66,7 +77,9 @@ def on_message(client, userdata, msg):
 
    if msg.topic == sub_topic4:
        global payload4
-       payload4 = message
+       payload4)message
+       payload4=json.loads(payload4)
+       speed.append(payload2["Speed"])
        print("Received message #4")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload4, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -85,6 +98,8 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic6:
        global payload6
        payload6 = message
+       payload6=json.loads(payload6)
+       seat_belt.append(payload6["SeatBelt])
        print("Received message #6")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload6, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -94,12 +109,20 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic7:
        global payload7
        payload7 = message
+       payload7=json.loads(payload7)                         
+       ultrasonic.append(payload7["Ultrasonic"])
        print("Received message #7")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload7, hostname = broker_thingsboard, auth = mqtt_auth)
        print("Please check LATEST TELEMETRY field of your device")
        print(payload7)
-
+   dataframe=df.DataFrame({'lat':lat,
+                           'long':long,
+                           'seat_belt':seat_belt,
+                           'speed':speed,
+                           'acc':acc,
+                           'distance':ultrasonic})
+                           
 # Create an MQTT client and attach our routines to it.
 client = mqtt.Client()
 client.on_connect = on_connect
