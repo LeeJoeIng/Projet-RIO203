@@ -16,16 +16,23 @@ def note(data):
         nb_dist_pb+=1
         compteur=0
     i+=1
-  
-#compte le nombre de points problématiques pour l'acceleration
+  points_dist=10-nb_dist_pb
+
+  #compte le nombre de points problématiques pour l'acceleration
   acc_pb=data['acc_pb'].loc[data['acc_pb'].isna()!=True].count()
-  
+
+  # calcul de la note liée à la ceinture
+  points_seat_belt=10*data.loc[0,'seat_belt']
+
   # calcul de la note à attribuer 
   points_acc=10-acc_pb
+  
+  # vérification qu'il n'y ait pas de notes negatives
   if points_acc<0:
     points_acc=0
-  points_dist=10-nb_dist_pb
+  
   if points_dist<0:
     points_dist=0
-  points_tot=points_acc+points_dist
-  return points_tot
+  print(points_acc, points_dist, points_seat_belt)
+  points_tot=points_acc+points_dist+points_seat_belt
+  return points_total
