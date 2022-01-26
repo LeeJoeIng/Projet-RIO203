@@ -29,6 +29,13 @@ long=[]
 seat_belt=[]
 acc=[]
 ultrasonic=[]
+   
+dataframe=pd.DataFrame({'lat':lat,
+                        'long':long,
+                        'seat_belt':seat_belt,
+                        'speed':speed,
+                        'acc':acc,
+                        'distance':ultrasonic})
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code " + str(rc))
@@ -89,6 +96,9 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic5:
        global payload5
        payload5 = message
+       payload5_int=json.loads(payload5)
+       if(payload5_int["Status"]=='Stop'):
+         print(dataframe)
        print("Received message #5")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload5, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -116,14 +126,8 @@ def on_message(client, userdata, msg):
        publish.single(mqtt_topic_TB, payload7, hostname = broker_thingsboard, auth = mqtt_auth)
        print("Please check LATEST TELEMETRY field of your device")
        print(payload7)
-   
-dataframe=pd.DataFrame({'lat':lat,
-                        'long':long,
-                        'seat_belt':seat_belt,
-                        'speed':speed,
-                        'acc':acc,
-                        'distance':ultrasonic})
-print(dataframe)                       
+
+                      
 # Create an MQTT client and attach our routines to it.
 client = mqtt.Client()
 client.on_connect = on_connect
