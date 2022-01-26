@@ -11,7 +11,7 @@ def setup():
 	GPIO.setup(TRIG, GPIO.OUT)
 	GPIO.setup(ECHO, GPIO.IN)
 
-def distance():
+def timeAndDistance():
 	GPIO.output(TRIG, 0)
 	time.sleep(0.000002)
 
@@ -28,21 +28,11 @@ def distance():
 	time2 = time.time()
 
 	during = time2 - time1
-	return during * 340 / 2 * 100
-
-def loop():
-	while True:
-		dis = distance()
-		print (dis, 'cm')
-		print ('')
-		time.sleep(0.3)
+	distance= during * 340 / 2 * 100
+	return time1, distance
 
 def destroy():
 	GPIO.cleanup()
 
-if __name__ == "__main__":
-	setup()
-	try:
-		loop()
-	except KeyboardInterrupt:
-		destroy()
+setup()
+
