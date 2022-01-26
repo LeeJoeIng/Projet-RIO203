@@ -99,7 +99,7 @@ def on_message(client, userdata, msg):
        global payload6
        payload6 = message
        payload6=json.loads(payload6)
-       seat_belt.append(payload6["SeatBelt"])
+       seat_belt.append(payload6["Seatbelt"])
        print("Received message #6")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload6, hostname = broker_thingsboard, auth = mqtt_auth)
