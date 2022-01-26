@@ -48,16 +48,16 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic1:
        global payload1
        payload1 = message
-       payload1=json.loads(payload1)
-       acc.append(float(payload1["Acceleration"]))
+       payload1_int=json.loads(payload1)
+       acc.append(float(payload1_int["Acceleration"]))
        print("Received message #1")
        print(payload1)
 
    if msg.topic == sub_topic2:
        global payload2
        payload2 = message
-       payload2=json.loads(payload2)
-       lat.append(float(payload2["Latitude"]))
+       payload2_int=json.loads(payload2)
+       lat.append(float(payload2_int["Latitude"]))
        print("Received message #2")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload2, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -67,8 +67,8 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic3:
        global payload3
        payload3=message
-       payload3=json.loads(payload3)
-       long.append(float(payload3["Longitude"]))
+       payload3_int=json.loads(payload3)
+       long.append(float(payload3_int["Longitude"]))
        print("Received message #3")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload3, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -78,8 +78,8 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic4:
        global payload4
        payload4=message
-       payload4=json.loads(payload4)
-       speed.append(float(payload2["Speed"]))
+       payload4_int=json.loads(payload4)
+       speed.append(float(payload2_int["Speed"]))
        print("Received message #4")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload4, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -98,8 +98,8 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic6:
        global payload6
        payload6 = message
-       payload6=json.loads(payload6)
-       seat_belt.append(float(payload6["Seatbelt"]))
+       payload6_int=json.loads(payload6)
+       seat_belt.append(float(payload6_int["Seatbelt"]))
        print("Received message #6")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload6, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -109,8 +109,8 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic7:
        global payload7
        payload7 = message
-       payload7=json.loads(payload7)                         
-       ultrasonic.append(float(payload7["Ultrasonic"]))
+       payload7_int=json.loads(payload7)                         
+       ultrasonic.append(float(payload7_int["Ultrasonic"]))
        print("Received message #7")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload7, hostname = broker_thingsboard, auth = mqtt_auth)
