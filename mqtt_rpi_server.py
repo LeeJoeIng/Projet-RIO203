@@ -122,7 +122,7 @@ def on_message(client, userdata, msg):
                            'speed':speed,
                            'acc':acc,
                            'distance':ultrasonic})
-                           
+print(dataframe)                       
 # Create an MQTT client and attach our routines to it.
 client = mqtt.Client()
 client.on_connect = on_connect
