@@ -7,12 +7,14 @@ import time
 from datetime import datetime
 import sys
 import pandas as pd
+
 port = 1883
 broker_address = "test.mosquitto.org"
 
 #Tokens of devices (à modifier)
 ACCESS_TOKEN1 = 'RfYFWuSQrmtMvXFLOBJm'
 mqtt_topic_TB = "v1/devices/me/telemetry"
+
 broker_thingsboard = "localhost"
 
 # receive messages on these topics
@@ -23,13 +25,14 @@ sub_topic4 = "rio203/speedFromJSON"
 sub_topic5 = "rio203/status"
 sub_topic6 = "rio203/seatbelt"
 sub_topic7 = "rio203/ultrasonic"
+
 speed=[]
 lat=[]
 long=[]
 seat_belt=[]
 acc=[]
 ultrasonic=[]
-   
+
 dataframe=pd.DataFrame({'lat':lat,
                         'long':long,
                         'seat_belt':seat_belt,
@@ -37,6 +40,9 @@ dataframe=pd.DataFrame({'lat':lat,
                         'acc':acc,
                         'distance':ultrasonic})
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
+#seat_belt=[0]*577
+#ultrasonic=[0]*577
+
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code " + str(rc))
    client.subscribe(sub_topic1)
@@ -96,8 +102,16 @@ def on_message(client, userdata, msg):
    if msg.topic == sub_topic5:
        global payload5
        payload5 = message
-       if(payload5=={"Status:Stop"):
+       if(payload5=="{\"Status\":Stop}"):
+         dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acc':acc,'distance':ultrasonic})
          print(dataframe)
+#          print(len(lat))
+#          print(len(long))
+#          print(len(seat_belt))
+#          print(len(speed))
+#          print(len(acc))
+#          print(len(ultrasonic))
+
        print("Received message #5")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
        publish.single(mqtt_topic_TB, payload5, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -132,7 +146,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect(broker_address, port, 60)
-
+print(dataframe)
 # Process network traffic and dispatch callbacks. This will also handle
 # reconnecting.
 client.loop_forever()
