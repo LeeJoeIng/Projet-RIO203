@@ -7,7 +7,6 @@ import paho.mqtt.publish as publish
 from sensors.potentiometer import get_ceinture
 from sensors.ultrasonic import timeAndDistance
 
-
 broker_address = "test.mosquitto.org"
 
 # publish messages on these topics
@@ -18,7 +17,6 @@ pub_topic4 = "rio203/speedFromJSON"
 pub_topic5 = "rio203/status"
 pub_topic6 = "rio203/seatbelt"
 pub_topic7 = "rio203/ultrasonic"
-
 
 # # # # # # # # # # # # # # # Preparing payload # # # # # # # # # # # # # # # # # #
 
@@ -74,7 +72,6 @@ def read_ultrasonic():
    payload+="}"  
    return payload 
 
-
 def read_status(str):
    status = str
    payload="{"
@@ -123,6 +120,7 @@ for j in range(len(dataframe['acceleration'])) :
     if new_seatbelt != seatbelt:
         seatbelt = new_seatbelt
         publish.single(pub_topic6, read_seatbelt(), hostname = broker_address)
+
     print("Done")
 #    time.sleep(1)
 
