@@ -22,7 +22,8 @@ def note(data):
   acc_pb=data['acc_pb'].loc[data['acc_pb'].isna()!=True].count()
 
   # calcul de la note liée à la ceinture
-  points_seat_belt=10*data.loc[0,'seat_belt']
+  seat_belt=data['seat_belt'].loc[data['seat_belt']==0].count()
+  points_seat_belt=10-seat_belt
 
   # calcul de la note à attribuer 
   points_acc=10-acc_pb
@@ -33,6 +34,9 @@ def note(data):
   
   if points_dist<0:
     points_dist=0
-  print(points_acc, points_dist, points_seat_belt)
+
+  if points_seat_belt<0:
+    points_seat_belt=0
+ 
   points_tot=points_acc+points_dist+points_seat_belt
-  return points_total
+  return points_tot
