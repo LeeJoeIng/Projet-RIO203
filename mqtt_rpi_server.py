@@ -7,6 +7,7 @@ import time
 from datetime import datetime
 import sys
 import pandas as pd
+from calculations.calcul_note import *
 
 port = 1883
 broker_address = "test.mosquitto.org"
@@ -37,11 +38,11 @@ dataframe=pd.DataFrame({'lat':lat,
                         'long':long,
                         'seat_belt':seat_belt,
                         'speed':speed,
-                        'acc':acc,
-                        'distance':ultrasonic})
+                        'acceleration':acc,
+                        'capteur_dist':ultrasonic})
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
-#seat_belt=[0]*577
-#ultrasonic=[0]*577
+seat_belt=[0]*577
+ultrasonic=[0]*577
 
 def on_connect(client, userdata, flags, rc):
    print("Connected with result code " + str(rc))
@@ -103,14 +104,10 @@ def on_message(client, userdata, msg):
        global payload5
        payload5 = message
        if(payload5=="{\"Status\":Stop}"):
-         dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acc':acc,'distance':ultrasonic})
-         print(dataframe)
-#          print(len(lat))
-#          print(len(long))
-#          print(len(seat_belt))
-#          print(len(speed))
-#          print(len(acc))
-#          print(len(ultrasonic))
+         dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acceleration':acc,'capteur_dist':ultrasonic})
+         #print(dataframe)
+         points = note(dataframe)
+         print("Your result of this driving session is: " + str(points) +" !")
 
        print("Received message #5")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
