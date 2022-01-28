@@ -25,6 +25,77 @@ def note(data):
   seat_belt=data['seat_belt'].loc[data['seat_belt']==0].count()
   points_seat_belt=10-seat_belt
 
+  #Cette fonction permet detecter lorsqu'il y a des panneaux stop et selon la vitesse de l'élève à ce moment là, 
+  #on va lui enlever ou non des points
+  #
+  #Cette fonction a en entreée 2 arguments qui sont les suivants: 
+  #  - tabVitesse : le tableau des vitesses en m/s
+  # - tabStop    : le tableau des detections de stop
+  #
+  #En sortie on renvoit la note de l'élève
+    
+  #conversion m/s en km/h
+  data['speed']=data['speed']*3.6
+  tabVitesse=data['speed']
+  tabStop=data['Stop']
+    
+  ######### Traitement de la detection des panneaux stops #########
+  pointsEleve = 0
+  paireTimeDebutFin = []
+  tabPaire = []
+  flagFirstTime = True
+  paireTimeDebutFin = []
+  for time in range(len(tabStop)) :
+      if (flagFirstTime == True) :
+          stopAvant = tabStop[time]
+          if (tabStop[time] == 1) :
+                #on detecte un stop
+            tabPaire.append(time) #time du début
+          flagFirstTime = False
+      else :
+          if (stopAvant == 0) :
+                #on avait pas detecter un stop au coup d'avant
+              if (tabStop[time] == 1) :
+                    #on detecte actuellement un stop
+                tabPaire.append(time) #temps du début
+          else :
+              #stopAvant == 1 cad on avait detecter un stop au coup d'avant
+              if (tabStop[time] == 0) :
+                  #on detecte actuellement plus de stop
+                  pointsEleve = pointsEleve + 1 #incrémente les points
+                  tabPaire.append(time) #temps de la fin
+                  paireTimeDebutFin.append(tabPaire)
+                  tabPaire = [] #initialise le tableau de paire
+                    
+          if (time == len(tabStop)-1) :
+              if (tabStop[time] == 1) :
+                  #on detecte un stop à la fin
+                  pointsEleve = pointsEleve + 1 #incrémente les points
+                  tabPaire.append(time+1)                
+                  paireTimeDebutFin.append(tabPaire) 
+                    
+          stopAvant = tabStop[time]
+  print("paireTimeDebutFin : " + str(paireTimeDebutFin))
+  print("Detecte " + str(pointsEleve) + " stop(s)")
+
+    ######### Regarde la vitesse lorsqu'on a detecte un panneau stop #########
+  vitesseRalentie = False
+  for i in range(len(paireTimeDebutFin)) :
+      paire = paireTimeDebutFin[i]
+      #print("Paire de time où il y a eu un stop " + str(paire))
+      for j in range(paire[0],paire[1],1) :
+          if (tabVitesse[j] <= 1) :
+                #vitesse inférieur à 1km/h
+              pointsEleve = pointsEleve - 1
+                # print("-->Vitesse : " + str(tabVitesse[j]) + "km/h à " + str(j) + "s")
+              break #sort de la boucle for j in range(paire[0],paire[1],1)
+  if (pointsEleve > 10) :
+        #nombre de point de l'élève est plafonné à 10 points
+      pointsEleve = 10
+    
+  points_stop=10-pointsEleve
+  
+
   # calcul de la note à attribuer 
   points_acc=10-acc_pb
   
@@ -38,5 +109,5 @@ def note(data):
   if points_seat_belt<0:
     points_seat_belt=0
  
-  points_tot=points_acc+points_dist+points_seat_belt
+  points_tot=points_acc+points_dist+points_seat_belt+points_stop
   return points_tot
