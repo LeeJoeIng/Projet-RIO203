@@ -48,7 +48,7 @@ def note(data):
   for time in range(len(tabStop)) :
       if (flagFirstTime == True) :
           stopAvant = tabStop[time]
-          if (tabStop[time] == 1) :
+          if (tabStop[time] == 5) :
                 #on detecte un stop
             tabPaire.append(time) #time du début
           flagFirstTime = False
