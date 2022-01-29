@@ -33,13 +33,16 @@ long=[]
 seat_belt=[]
 acc=[]
 ultrasonic=[]
+stop=[]
 
 dataframe=pd.DataFrame({'lat':lat,
                         'long':long,
                         'seat_belt':seat_belt,
                         'speed':speed,
                         'acceleration':acc,
-                        'capteur_dist':ultrasonic})
+                        'capteur_dist':ultrasonic,
+                        'Stop':stop})
+
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
 seat_belt=[0]*577
 ultrasonic=[0]*577
@@ -104,10 +107,17 @@ def on_message(client, userdata, msg):
        global payload5
        payload5 = message
        if(payload5=="{\"Status\":Stop}"):
-         dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acceleration':acc,'capteur_dist':ultrasonic})
-         #print(dataframe)
+
+         for i in range(len(speed)):
+           if (speed[i] <= 0) :
+             stop.append(1)
+           else :
+             stop.append(0)
+
+         dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acceleration':acc,'capteur_dist':ultrasonic, 'Stop':stop})
+         print(dataframe)
          points = note(dataframe)
-         print("Your result of this driving session is: " + str(points) +" !")
+         print("Your result of this driving session is: " + str(points) +"!")
 
        print("Received message #5")
        mqtt_auth = { 'username': ACCESS_TOKEN1 }
