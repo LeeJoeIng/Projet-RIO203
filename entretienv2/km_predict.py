@@ -15,10 +15,24 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
 ############# RECUPERATION DES VALEURS STOCKEES SUR THINGSBOARD #############
+# Récupération du token JWT
+header = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+}
+
+data = '{"username":"tenant@thingsboard.org", "password":"tenant"}'
+url = 'http://localhost:8080/api/auth/login'
+response = requests.post(url=url, headers=header, data=data)
+response_json = response.json()
+print(response_json['token'])
+jwt_token = response_json['token'] # Token JWT
+print(jwt_token)
+
 # Header
 headers = {
     'Content-type': 'application/json',
-    'X-Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiI5ZjBiMTUzMC02ZTc3LTExZWMtYWM2NC04OWI1N2RkODVhYzEiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiOWQ3NjFkNTAtNmU3Ny0xMWVjLWFjNjQtODliNTdkZDg1YWMxIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNjQzNTQxODk4LCJleHAiOjE2NDM1NTA4OTh9.t_RlBwT_FdxrTHGPfRTyf2kz-RwcibNb838imN4HJwfOvN9EW6usAN9aplU7ObYLspzgyszkZUeVthoaOyQBQQ',
+    'X-Authorization': 'Bearer '+ jwt_token,
 }
 
 # URL pour récupérer la date de la dernière révision et son kilométrage
