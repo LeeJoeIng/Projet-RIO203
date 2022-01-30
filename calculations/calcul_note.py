@@ -86,8 +86,8 @@ def note(data):
       paire = paireTimeDebutFin[i]
       #print("Paire de time où il y a eu un stop " + str(paire))
       for j in range(paire[0],paire[1],1) :
-          if (tabVitesse[j] <= 1) :
-                #vitesse inférieur à 1km/h
+          if (tabVitesse[j] <= 5) :
+                #vitesse inférieur ou égale à 5km/h
               pointsEleve = pointsEleve - 1
                 # print("-->Vitesse : " + str(tabVitesse[j]) + "km/h à " + str(j) + "s")
               break #sort de la boucle for j in range(paire[0],paire[1],1)
