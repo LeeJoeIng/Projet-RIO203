@@ -33,7 +33,7 @@ def read_speed(i):
    speed = dataframe.loc[i,'speed']
    payload="{"
    payload+="\"Speed\":"
-   payload+=str(speed)
+   payload+=str(speed*3.6)
    payload+="}"
    #print(payload)
    return payload
