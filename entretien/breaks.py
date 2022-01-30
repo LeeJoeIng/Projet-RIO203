@@ -59,7 +59,7 @@ for i in range(len(pf_1)):
         pf1_donnees = pf_1[0:i]
         
         model_pf_avt = make_pipeline(PolynomialFeatures(degree), Ridge(alpha=1e-3))
-        model_pf_avt.fit(pf1_donnees[:, np.newaxis], date_timestamps)
+        model_pf_avt.fit(pf1_donnees[:, np.newaxis], date_timestamps[0:i])
         
         # Prédiction date de changement
         date_frein1 = model_pf_avt.predict(threshold_frein[:, np.newaxis])
@@ -73,10 +73,12 @@ for i in range(len(pf_1)):
         
         ## FREIN 1
         pf1_donnees = np.zeros((1,))
-        pf1_donnees[0] = pf_1[0:i]
+        pf1_donnees[0] = pf_1[0]
         
         model_pf_avt = make_pipeline(PolynomialFeatures(degree), Ridge(alpha=1e-3))
-        model_pf_avt.fit(pf1_donnees[:, np.newaxis], date_timestamps)
+        date_timestamp = np.zeros((1,))
+        date_timestamp[0] = date_timestamps[0]
+        model_pf_avt.fit(pf1_donnees[:, np.newaxis], date_timestamp)
         
         # Prédiction date de changement
         date_frein1 = model_pf_avt.predict(threshold_frein[:, np.newaxis])
