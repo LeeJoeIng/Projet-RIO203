@@ -100,7 +100,7 @@ dataframe['acceleration'] = dataframe['speed'].diff() #car il y a un relevé par
 dataframe.loc[dataframe['acceleration'].isna()==True,'acceleration']=0 #Vérifie qu'aucune valeur ne soit NAN
 
 #mention that the session is started
-publish.single(pub_topic5, read_status("On route"), hostname = broker_address)
+publish.single(pub_topic5, read_status("Moving"), hostname = broker_address)
 
 #publish messages to Rpi server
 for j in range(len(dataframe['acceleration'])) :
