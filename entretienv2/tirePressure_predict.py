@@ -25,9 +25,7 @@ data = '{"username":"tenant@thingsboard.org", "password":"tenant"}'
 url = 'http://localhost:8080/api/auth/login'
 response = requests.post(url=url, headers=header, data=data)
 response_json = response.json()
-print(response_json['token'])
 jwt_token = response_json['token'] # Token JWT
-print(jwt_token)
 
 # Header
 headers = {
@@ -42,24 +40,25 @@ response = requests.get(url_revision, headers=headers)
 
 # Parser la réponse
 response_json = response.json() 
-print(response_json)
 
 for key in response_json: 
     print(key)
-    date_dernier_gonflage = int(key['value']) # Récupération de la date de dernière révision
+    date_dernier_gonflage = int(int(key['value'])/1000) # Récupération de la date de dernière révision
+print(str(datetime.fromtimestamp(date_dernier_gonflage )))
+print(date_dernier_gonflage)
 
 # URL pour les pressions à récupérer
 # commande test sur terminal :
     # curl -v -X GET 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=1640991599000&endTs=1643151599000&agg=NONE' --header 'Content-Type:application/json' --header 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiI5ZjBiMTUzMC02ZTc3LTExZWMtYWM2NC04OWI1N2RkODVhYzEiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiOWQ3NjFkNTAtNmU3Ny0xMWVjLWFjNjQtODliNTdkZDg1YWMxIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNjQzNTQxODk4LCJleHAiOjE2NDM1NTA4OTh9.t_RlBwT_FdxrTHGPfRTyf2kz-RwcibNb838imN4HJwfOvN9EW6usAN9aplU7ObYLspzgyszkZUeVthoaOyQBQQ'
 # On récupère les kilométrages depuis la dernière révision
-url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=' + str(date_dernier_gonflage) + '&endTs=1643151599000&agg=NONE'
+url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=' + str(date_dernier_gonflage) + '000' + '&endTs=1643151599000&agg=NONE'
 #url_recup =  'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=1640991599000&endTs=1643151599000&agg=NONE'
 
 response = requests.get(url_recup, headers=headers)
+print(response.json())
 
 # Parser la réponse
 response_json = response.json() 
-print(response_json)
 
 ts = [] #timestamps
 pression = [] #kilométrage
@@ -70,9 +69,6 @@ for key in response_json['tire']:
 
 ts = np.array(ts)
 pression = np.array(pression)
-
-print(ts)
-print(pression)
 
 ###################### REGRESSION PRESSION #############################
 
@@ -107,26 +103,25 @@ data = '{\"date_gonflage\":' + str(int(date_regonflage_pred)) + "}"
 response = requests.post(url_tire, headers=headers, data=data)
 
 
-############## Date de gonflage prédite en prenant en compte l'historique 
-# de toutes les valeurs mesurées à date 
+############## Date de gonflage : envoi en modifiant le timestamp ############
 ## PNEU 1
 data2 = '{' + '"ts":' + str(int(date_regonflage_pred)) + "000," + '"values":{"date_gonflage_timestamp": 2.4' + '}}'
 response = requests.post(url_tire, headers=headers, data=data2)
 
 
 ############# Prédiction de la pression en fonction de la date (à tracer sur thingsboard) ###############
-
 ## PNEU1 
 # Dates pour lesquelles on doit prédire la pression
-dates_pred = np.arange(datetime.fromtimestamp(ts[0]), datetime.fromtimestamp(date_regonflage_pred[0]), timedelta(days=1)).astype(datetime)
-
+dates_pred = np.arange(datetime.fromtimestamp(ts[len(ts)-1]), datetime.fromtimestamp(date_regonflage_pred[0]), timedelta(days=1)).astype(datetime)
+print(dates_pred)
 # Conversion en timestamps
-dates_pred_timestamps1 = []
+dates_pred_timestamps = []
 for i in range(len(dates_pred)):  
-    dates_pred_timestamps1.append(datetime.timestamp(dates_pred[i]))
+    dates_pred_timestamps.append(datetime.timestamp(dates_pred[i]))
 
-dates_pred_timestamps_array = np.array(dates_pred_timestamps1).astype(int)
+dates_pred_timestamps_array = np.array(dates_pred_timestamps).astype(int)
 
+print(len(dates_pred_timestamps_array ))
 
 # Modèle pour la prédiction PNEU1 
 model_press_pred = make_pipeline(PolynomialFeatures(degree), Ridge(alpha=1e-3))
@@ -138,5 +133,5 @@ press_pred1 = model_press_pred.predict(dates_pred_timestamps_array[:, np.newaxis
 for i in range(len(press_pred1)):
     
     # Pression prédite en fonction de la date pour le PNEU 1
-    data3 = '{'+'\"ts\":' + str(int(dates_pred_timestamps1[i])) + "000," + '\"values\":{\"pression_pred\":' + str(press_pred1[i]) + '}}'
+    data3 = '{'+'\"ts\":' + str(int(dates_pred_timestamps[i])) + "000," + '\"values\":{\"pression_pred\":' + str(press_pred1[i]) + '}}'
     response = requests.post(url_tire, headers=headers, data=data3)

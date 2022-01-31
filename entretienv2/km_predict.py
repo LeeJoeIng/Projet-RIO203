@@ -45,13 +45,13 @@ response_json = response.json()
 response_json = response.json() 
 
 for key in response_json : 
-    date_derniere_revision = int(key['value']) # Récupération de la date de dernière révision
+    date_derniere_revision = int(int(key['value'])/1000) # Récupération de la date de dernière révision
 
 # URL pour les kilométrages à récupérer 
 # commande test sur terminal :
     # curl -v -X GET 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=1640991599000&endTs=1643151599000&agg=NONE' --header 'Content-Type:application/json' --header 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiI5ZjBiMTUzMC02ZTc3LTExZWMtYWM2NC04OWI1N2RkODVhYzEiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiOWQ3NjFkNTAtNmU3Ny0xMWVjLWFjNjQtODliNTdkZDg1YWMxIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNjQzNTQxODk4LCJleHAiOjE2NDM1NTA4OTh9.t_RlBwT_FdxrTHGPfRTyf2kz-RwcibNb838imN4HJwfOvN9EW6usAN9aplU7ObYLspzgyszkZUeVthoaOyQBQQ'
 # On récupère les kilométrages depuis la dernière révision
-url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=' + str(date_derniere_revision) + '&endTs=1643151599000&agg=NONE'
+url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=' + str(date_derniere_revision) + "000" + '&endTs=1643151599000&agg=NONE'
 #url_recup =  'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=1640991599000&endTs=1643151599000&agg=NONE'
 
 response = requests.get(url_recup, headers=headers)
@@ -71,6 +71,7 @@ km = np.array(km)
 km_derniere_revision = np.zeros((1,))
 km_derniere_revision[0] = km[0]
 print(km_derniere_revision)
+
 
 ############## REGRESSION KILOMETRAGE ###################
 
@@ -97,7 +98,7 @@ response = requests.post(url, headers=headers, data=data)
 model_km_pred = make_pipeline(PolynomialFeatures(degree), Ridge(alpha=1e-3))
 model_km_pred.fit(ts[:, np.newaxis], km)
 # Dates dont on veut prédire le kilométrage
-dates_pred = np.arange(datetime.fromtimestamp(ts[0]), datetime.fromtimestamp(date_revision_pred[0]), timedelta(days=1)).astype(datetime)
+dates_pred = np.arange(datetime.fromtimestamp(ts[len(ts)-1]), datetime.fromtimestamp(date_revision_pred[0]), timedelta(days=1)).astype(datetime)
 #Conversion en timestamps 
 dates_pred_timestamps = []
 for i in range(len(dates_pred)):  

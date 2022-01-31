@@ -7,14 +7,9 @@ Created on Sun Jan 30 12:40:47 2022
 """
 
 import numpy as np
-import time
 import requests
 
 from datetime import datetime, timedelta
-
-from sklearn.linear_model import Ridge
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
 
 # préparation pour envoi vers thingsboard
 # Header
