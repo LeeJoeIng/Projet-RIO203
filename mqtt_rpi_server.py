@@ -52,8 +52,8 @@ dataframe=pd.DataFrame({'lat':lat,
                         'Stop':stop})
 
 # # # # # # # # # # # # # # # MQTT section # # # # # # # # # # # # # # # # # #
-seat_belt=[1]*502
-ultrasonic=[10]*502
+#seat_belt=[1]*502
+#ultrasonic=[10]*502
 stop=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 def on_connect(client, userdata, flags, rc):
@@ -97,7 +97,7 @@ def on_message(client, userdata, msg):
        global payload3
        payload3=message
        payload3_int=json.loads(payload3)
-       long.append(float(payload3_int["Longtitude"]))
+       long.append(float(payload3_int["Longitude"]))
        print("Received message #3")
        mqtt_auth = { 'username': ACCESS_TOKEN3 }
        publish.single(mqtt_topic_TB, payload3, hostname = broker_thingsboard, auth = mqtt_auth)
@@ -129,8 +129,12 @@ def on_message(client, userdata, msg):
          dataframe=pd.DataFrame({'lat':lat,'long':long,'seat_belt':seat_belt,'speed':speed,'acceleration':acc,'capteur_dist':ultrasonic, 'Stop':stop})
          print(dataframe)
          points = note(dataframe)
-         print("Your result of this driving session is: " + str(points) +"!")
-         publish.single(mqtt_topic_TB, "{\"Points\":" + str(points) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
+         print("Your result of this driving session is: " + str(points[0]) +"!")
+         publish.single(mqtt_topic_TB, "{\"Points\":" + str(points[0]) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
+         publish.single(mqtt_topic_TB, "{\"Points_acceleration\":" + str(points[1]) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
+         publish.single(mqtt_topic_TB, "{\"Points_distance\":" + str(points[2]) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
+         publish.single(mqtt_topic_TB, "{\"Points_seatbelt\":" + str(points[3]) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
+         publish.single(mqtt_topic_TB, "{\"Points_stops\":" + str(points[4]) + "}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN8 })
 
          publish.single(mqtt_topic_TB, "{\"Acceleration\":0}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN1 })
          publish.single(mqtt_topic_TB, "{\"Speed\":0}", hostname = broker_thingsboard, auth = { 'username': ACCESS_TOKEN4 })
