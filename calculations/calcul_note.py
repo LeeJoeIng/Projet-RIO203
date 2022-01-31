@@ -114,6 +114,6 @@ def note(data):
   points_tot=points_acc+points_dist+points_seat_belt+points_stop
   print("points acceleration : ", points_acc, "/10")
   print("points acceleration : ", points_dist, "/10")
-  print("points acceleration : ", points_seat_bealt, "/10")
+  print("points acceleration : ", points_seat_belt, "/10")
   print("points acceleration : ", points_stops, "/10")
   return points_tot
