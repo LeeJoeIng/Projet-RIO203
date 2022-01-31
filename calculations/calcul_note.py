@@ -116,4 +116,6 @@ def note(data):
   print("points distance : ", points_dist, "/10")
   print("points seatbelt : ", points_seat_belt, "/10")
   print("points stops : ", points_stop, "/10")
-  return points_tot
+
+  score = [points_tot, points_acc, points_dist, points_seat_belt, points_stop]
+  return score
