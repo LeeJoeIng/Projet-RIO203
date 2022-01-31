@@ -47,11 +47,11 @@ def read_latitude(i):
    #print(payload)
    return payload
 
-def read_longtitude(i):
-   longtitude = dataframe.loc[i,'latlng'][1]
+def read_longitude(i):
+   longitude = dataframe.loc[i,'latlng'][1]
    payload="{"
-   payload+="\"Longtitude\":"
-   payload+=str(longtitude)
+   payload+="\"Longitude\":"
+   payload+=str(longitude)
    payload+="}"
    #print(payload)
    return payload
@@ -107,7 +107,7 @@ for j in range(len(dataframe['acceleration'])) :
 #for j in range(5) :
     publish.single(pub_topic1, read_accel(j), hostname = broker_address)
     publish.single(pub_topic2, read_latitude(j), hostname = broker_address)
-    publish.single(pub_topic3, read_longtitude(j), hostname = broker_address)
+    publish.single(pub_topic3, read_longitude(j), hostname = broker_address)
     publish.single(pub_topic4, read_speed(j), hostname = broker_address)
     publish.single(pub_topic7, read_ultrasonic(), hostname = broker_address)
     publish.single(pub_topic6, read_seatbelt(get_ceinture()), hostname = broker_address)
