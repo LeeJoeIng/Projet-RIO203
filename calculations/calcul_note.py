@@ -2,7 +2,7 @@ import numpy as np
 
 def note(data):
   data['dist_s']=data['capteur_dist']/data['speed'] # Calcul de la distance en seconde
-  data['acc_pb']=data['acceleration'].loc[(data['acceleration']>= 4.5) | (data['acceleration']<=- 4.5)]# détermination des accélération hors de l'intervalle [-4.5,4.5]
+  data['acc_pb']=data['acceleration'].loc[(data['acceleration']>= 15) | (data['acceleration']<=- 15)]# détermination des accélération hors de l'intervalle [-15,15]
   data['dist_pb']=data['dist_s'].loc[data['dist_s']<2]#détermination des distance problématique
 
 # calcul du nombre de fois où la voiture reste pendant plus de 5s à moins de 2s d'une autre voiture
@@ -112,4 +112,8 @@ def note(data):
     points_seat_belt=0
 
   points_tot=points_acc+points_dist+points_seat_belt+points_stop
+  print("points acceleration : ", points_acc, "/10")
+  print("points acceleration : ", points_dist, "/10")
+  print("points acceleration : ", points_seat_bealt, "/10")
+  print("points acceleration : ", points_stops, "/10")
   return points_tot
