@@ -15,6 +15,59 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
+###################### RECUPERATION DES DONNEES SUR FIT IOT et POST VERS TB ##################
+
+url_fitiot = 'http://[2001:660:4403:486::a173]' #m3_152
+
+response = requests.get(url_fitiot)
+oil_fitiot = float(response.text)
+
+############# TOKEN JWT #############
+# Récupération du token JWT
+header = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+}
+
+data = '{"username":"tenant@thingsboard.org", "password":"tenant"}'
+url = 'http://localhost:8080/api/auth/login'
+response = requests.post(url=url, headers=header, data=data)
+response_json = response.json()
+jwt_token = response_json['token'] # Token JWT
+
+################## Récupération dernière télémétrie sur thingsboard @##########
+# Header
+header = {
+    'Content-type': 'application/json',
+    'X-Authorization': 'Bearer ' + jwt_token,
+}
+
+url_last_tire = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=oil&agg=NONE'
+
+response = requests.get(url_last_tire, headers = header)
+response_json = response.json()
+print(response_json)
+
+for key in response_json['oil']:
+    last_oil = float(key['value'])
+
+delta = oil_fitiot - last_oil
+oil_fitiot = oil_fitiot - delta
+print(oil_fitiot)
+
+# POST de LA NOUVELLE VALEUR A THINGSBOARD 
+url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
+
+header_post = {
+            'Content-type': 'application/json',
+}
+
+data_fitiot = '{\"oil\":' + str(oil_fitiot) + '}'
+
+response = requests.post(url_post, headers = header_post, data = data_fitiot)
+
+
+
 ############# RECUPERATION DES VALEURS STOCKEES SUR THINGSBOARD #############
 # Récupération du token JWT
 header = {
@@ -50,7 +103,9 @@ for key in response_json :
 # commande test sur terminal :
     # curl -v -X GET 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=1640991599000&endTs=1643151599000&agg=NONE' --header 'Content-Type:application/json' --header 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiI5ZjBiMTUzMC02ZTc3LTExZWMtYWM2NC04OWI1N2RkODVhYzEiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiOWQ3NjFkNTAtNmU3Ny0xMWVjLWFjNjQtODliNTdkZDg1YWMxIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNjQzNTQxODk4LCJleHAiOjE2NDM1NTA4OTh9.t_RlBwT_FdxrTHGPfRTyf2kz-RwcibNb838imN4HJwfOvN9EW6usAN9aplU7ObYLspzgyszkZUeVthoaOyQBQQ'
 # On récupère les kilométrages depuis la dernière vidange
-url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=' + str(date_derniere_vidange) + "000" + '&endTs=1643151599000&agg=NONE'
+today = datetime.now()
+today = int(datetime.timestamp(today))
+url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=' + str(date_derniere_vidange) + "000" + '&endTs=' + str(today) + '000' + '&agg=NONE'
 
 response = requests.get(url_recup, headers=headers)
 
@@ -72,7 +127,7 @@ print(km_derniere_vidange)
 
 
 # URL pour le niveau d'huile depuis la dernière vidange
-url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=oil&startTs=' + str(date_derniere_vidange) + "000" + '&endTs=1643151599000&agg=NONE'
+url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=oil&startTs=' + str(date_derniere_vidange) + "000" + '&endTs=' + str(today) + '000' + '&agg=NONE'
 
 response = requests.get(url_recup, headers=headers)
 

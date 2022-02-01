@@ -95,7 +95,7 @@ PT_THREAD(generate_routes(struct httpd_state *s))
 
   PSOCK_BEGIN(&s->sout);
 
-  ADD("kilometrage:%f\n", km_initial+(rand() % (0 - 50 + 1)) + 0);
+  ADD("%f", (rand() % (0 - 100 + 1)) + 0);
 
   SEND_STRING(&s->sout, buf);
 

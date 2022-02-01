@@ -22,9 +22,7 @@ data = '{"username":"tenant@thingsboard.org", "password":"tenant"}'
 url = 'http://localhost:8080/api/auth/login'
 response = requests.post(url=url, headers=header, data=data)
 response_json = response.json()
-print(response_json['token'])
 jwt_token = response_json['token'] # Token JWT
-print(jwt_token)
 
 # Header
 headers = {
@@ -39,7 +37,6 @@ response = requests.get(url_revision, headers=headers)
 
 # Parser la réponse
 response_json = response.json() 
-print(response_json)
 
 for key in response_json: 
     print(key)
@@ -49,7 +46,8 @@ for key in response_json:
 ################## GENERATION DES DONNEES DE SIMULATION ###################
 
 ## Dates simulées pour le niveau d'huile 
-dates = np.arange(datetime.fromtimestamp(date_derniere_vidange), datetime(2022,1,26,23,59,59), timedelta(days=1)).astype(datetime)
+yesterday = datetime.now() - timedelta(days=1)
+dates = np.arange(datetime.fromtimestamp(date_derniere_vidange), yesterday, timedelta(days=1)).astype(datetime)
 
 date_timestamps = []
 for i in range(len(dates)):  

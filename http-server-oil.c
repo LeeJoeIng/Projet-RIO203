@@ -9,9 +9,6 @@
 #include "dev/button-sensor.h"
 #include "dev/slip.h"
 
-//ADD Pression sensor
-#include "dev/pressure-sensor.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -96,26 +93,12 @@ PT_THREAD(generate_routes(struct httpd_state *s))
   }
 
   PSOCK_BEGIN(&s->sout);
-  blen = 0;
-  pressure_sensor.configure(PRESSURE_SENSOR_DATARATE, LPS331AP_P_12_5HZ_T_1HZ);
-  SENSORS_ACTIVATE(pressure_sensor);
-  int pressure = pressure_sensor.value(0);
 
-  //Conversion to mbars
-  float pressure_bar = (float)pressure / PRESSURE_SENSOR_VALUE_SCALE;
- 
-  //Conversion to bar 
-  pressure_bar = pressure_bar * 0.001;
-
-  //Apply offset (realistic tyre pressure) 
-  pressure_bar = pressure_bar + 1.6;
-
-  //Pressure in bars
-  ADD("%f", pressure_bar);
-
+  ADD("%f", 4.4 + (float)rand()/RAND_MAX);
   SEND_STRING(&s->sout, buf);
 
   blen = 0;
+
   PSOCK_END(&s->sout);
 }
 /*---------------------------------------------------------------------------*/

@@ -23,8 +23,10 @@ url = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
 ################## GENERATION DES DONNEES DE SIMULATION ###################
 ## Dates simulées pour le kilométrage
 # On suppose qu'on commence les mesures à partir de la date de la derniere revision 
-dates = np.arange(datetime(2021,1,1,23,59,59), datetime(2022,1,26,23,59,59), timedelta(days=1)).astype(datetime)
+yesterday = datetime.now() - timedelta(days=1)
+dates = np.arange(datetime(2021,1,1,23,59,59), yesterday, timedelta(days=1)).astype(datetime)
 date_timestamps = []
+
 for i in range(len(dates)):  
     date_timestamps.append(int(datetime.timestamp(dates[i])))
 date_timestamps = np.array(date_timestamps).astype(int)

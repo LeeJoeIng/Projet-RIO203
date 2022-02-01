@@ -21,9 +21,7 @@ data = '{"username":"tenant@thingsboard.org", "password":"tenant"}'
 url = 'http://localhost:8080/api/auth/login'
 response = requests.post(url=url, headers=header, data=data)
 response_json = response.json()
-print(response_json['token'])
 jwt_token = response_json['token'] # Token JWT
-print(jwt_token)
 
 # Header
 headers = {
@@ -38,16 +36,15 @@ response = requests.get(url_revision, headers=headers)
 
 # Parser la réponse
 response_json = response.json() 
-print(response_json)
 
 for key in response_json: 
-    print(key)
     date_dernier_freins = int(int(key['value'])/1000) # Récupération de la date de dernière révision
 
 
 # Dates Simulées pour les données sur la pression des pneus
 # On suppose qu'on commence les mesures à partir de la date du dernier changement
-dates = np.arange(datetime.fromtimestamp(date_dernier_freins), datetime(2022,1,26,23,59,59), timedelta(days=1)).astype(datetime)
+yesterday = datetime.now() - timedelta(days=1)
+dates = np.arange(datetime.fromtimestamp(date_dernier_freins), yesterday, timedelta(days=1)).astype(datetime)
 date_timestamps = []
 for i in range(len(dates)):  
     date_timestamps.append(int(datetime.timestamp(dates[i])))

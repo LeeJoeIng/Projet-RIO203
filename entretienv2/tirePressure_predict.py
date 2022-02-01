@@ -14,7 +14,15 @@ from sklearn.linear_model import Ridge
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
 
-########### RECUPERATION DES DONNEES SUR THINGSBOARD #############
+###################### RECUPERATION DES DONNEES SUR FIT IOT et POST VERS TB ##################
+
+url_fitiot = 'http://[2001:660:4403:486::1057]' #m3_150 
+
+response = requests.get(url_fitiot)
+tire_fitiot = float(response.text)
+print(tire_fitiot)
+
+####################### JWT TOKEN #######################
 # Récupération du token JWT
 header = {
     'Content-type': 'application/json',
@@ -26,9 +34,47 @@ url = 'http://localhost:8080/api/auth/login'
 response = requests.post(url=url, headers=header, data=data)
 response_json = response.json()
 jwt_token = response_json['token'] # Token JWT
+print(jwt_token)
+
+################## Récupération dernière télémétrie sur thingsboard @##########
+# Header
+header = {
+    'Content-type': 'application/json',
+    'X-Authorization': 'Bearer ' + jwt_token,
+}
+
+url_last_tire = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&agg=NONE'
+
+response = requests.get(url_last_tire, headers = header)
+response_json = response.json()
+
+for key in response_json['tire']:
+    last_tire = float(key['value'])
+
+print(last_tire)
+delta = tire_fitiot - last_tire 
+tire_fitiot = tire_fitiot - delta
+print(delta)
+
+# Compensation pour cohérence avec les données historiques
+
+
+# POST de LA NOUVELLE VALEUR A THINGSBOARD 
+url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
+
+header_post = {
+            'Content-type': 'application/json',
+}
+
+data_fitiot = '{\"tire\":' + str(tire_fitiot) + '}'
+
+response = requests.post(url_post, headers = header_post, data = data_fitiot)
+
+
+########### RECUPERATION DES DONNEES SUR THINGSBOARD #############
 
 # Header
-headers = {
+header = {
     'Content-type': 'application/json',
     'X-Authorization': 'Bearer ' + jwt_token,
 }
@@ -36,7 +82,7 @@ headers = {
 # URL pour récupérer la date de dernier gonflage
 url_revision = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/attributes/SHARED_SCOPE?keys=date_dernier_gonflage'
 
-response = requests.get(url_revision, headers=headers)
+response = requests.get(url_revision, headers=header)
 
 # Parser la réponse
 response_json = response.json() 
@@ -51,10 +97,12 @@ print(date_dernier_gonflage)
 # commande test sur terminal :
     # curl -v -X GET 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=1640991599000&endTs=1643151599000&agg=NONE' --header 'Content-Type:application/json' --header 'X-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZW5hbnRAdGhpbmdzYm9hcmQub3JnIiwic2NvcGVzIjpbIlRFTkFOVF9BRE1JTiJdLCJ1c2VySWQiOiI5ZjBiMTUzMC02ZTc3LTExZWMtYWM2NC04OWI1N2RkODVhYzEiLCJlbmFibGVkIjp0cnVlLCJpc1B1YmxpYyI6ZmFsc2UsInRlbmFudElkIjoiOWQ3NjFkNTAtNmU3Ny0xMWVjLWFjNjQtODliNTdkZDg1YWMxIiwiY3VzdG9tZXJJZCI6IjEzODE0MDAwLTFkZDItMTFiMi04MDgwLTgwODA4MDgwODA4MCIsImlzcyI6InRoaW5nc2JvYXJkLmlvIiwiaWF0IjoxNjQzNTQxODk4LCJleHAiOjE2NDM1NTA4OTh9.t_RlBwT_FdxrTHGPfRTyf2kz-RwcibNb838imN4HJwfOvN9EW6usAN9aplU7ObYLspzgyszkZUeVthoaOyQBQQ'
 # On récupère les kilométrages depuis la dernière révision
-url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=' + str(date_dernier_gonflage) + '000' + '&endTs=1643151599000&agg=NONE'
+today = datetime.now()
+today = int(datetime.timestamp(today))
+url_recup = 'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=tire&startTs=' + str(date_dernier_gonflage) + '000' + '&endTs=' + str(today) + '000' + '&agg=NONE'
 #url_recup =  'http://localhost:8080/api/plugins/telemetry/DEVICE/4f5afac0-70a5-11ec-a326-4345504f184b/values/timeseries?keys=kilometrage&startTs=1640991599000&endTs=1643151599000&agg=NONE'
 
-response = requests.get(url_recup, headers=headers)
+response = requests.get(url_recup, headers=header)
 print(response.json())
 
 # Parser la réponse
@@ -70,12 +118,13 @@ for key in response_json['tire']:
 ts = np.array(ts)
 pression = np.array(pression)
 
-###################### REGRESSION PRESSION #############################
+
+###################### REGRESSION PRESSION ##################################
 
 # URL thingsboard pour le device "Maintenance"
 url_tire='http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
 
-headers = {
+header = {
             'Content-type': 'application/json',
 }
 
@@ -100,13 +149,13 @@ print("prochain gonfflage:"+str(datetime.fromtimestamp(date_regonflage_pred[0]))
 # Envoi vers thingsboard
 data = '{\"date_gonflage\":' + str(int(date_regonflage_pred)) + "}"
 
-response = requests.post(url_tire, headers=headers, data=data)
+response = requests.post(url_tire, headers=header, data=data)
 
 
 ############## Date de gonflage : envoi en modifiant le timestamp ############
 ## PNEU 1
 data2 = '{' + '"ts":' + str(int(date_regonflage_pred)) + "000," + '"values":{"date_gonflage_timestamp": 2.4' + '}}'
-response = requests.post(url_tire, headers=headers, data=data2)
+response = requests.post(url_tire, headers=header, data=data2)
 
 
 ############# Prédiction de la pression en fonction de la date (à tracer sur thingsboard) ###############
@@ -134,4 +183,4 @@ for i in range(len(press_pred1)):
     
     # Pression prédite en fonction de la date pour le PNEU 1
     data3 = '{'+'\"ts\":' + str(int(dates_pred_timestamps[i])) + "000," + '\"values\":{\"pression_pred\":' + str(press_pred1[i]) + '}}'
-    response = requests.post(url_tire, headers=headers, data=data3)
+    response = requests.post(url_tire, headers=header, data=data3)

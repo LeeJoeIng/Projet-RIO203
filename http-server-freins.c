@@ -94,7 +94,7 @@ PT_THREAD(generate_routes(struct httpd_state *s))
 
   PSOCK_BEGIN(&s->sout);
 
-  ADD("freins:%f\n", 17.5);
+  ADD("%f", 17.5);
 
   SEND_STRING(&s->sout, buf);
 
