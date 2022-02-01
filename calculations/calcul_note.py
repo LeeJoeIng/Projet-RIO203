@@ -1,7 +1,7 @@
 import numpy as np
 
 def note(data):
-  data['dist_s']=data['capteur_dist']/data['speed'] # Calcul de la distance en seconde
+  data['dist_s']=data['capteur_dist']*3.6/data['speed'] # Calcul de la distance en seconde
   data['acc_pb']=data['acceleration'].loc[(data['acceleration']>= 15) | (data['acceleration']<=- 15)]# détermination des accélération hors de l'intervalle [-15,15]
   data['dist_pb']=data['dist_s'].loc[data['dist_s']<2]#détermination des distance problématique
 
