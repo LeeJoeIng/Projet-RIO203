@@ -14,27 +14,27 @@ import subprocess
 import numpy as np
 
 ################# Get consumption & rssi data from fit iot nodes #####################
-# url_kilometrage = "http://[2001:660:4403:486::1757]" #mileometer node
-# url_pression_pneu = "http://[2001:660:4403:486::1057]" #tire pressure node
-# url_frein = "http://[2001:660:4403:486::a090]" #brake pad node
-# url_oil = "http://[2001:660:4403:486::a173]" #oil level node
+url_kilometrage = "http://[2001:660:4403:486::1757]" #mileometer node
+url_pression_pneu = "http://[2001:660:4403:486::1057]" #tire pressure node
+url_frein = "http://[2001:660:4403:486::a090]" #brake pad node
+url_oil = "http://[2001:660:4403:486::a173]" #oil level node
 
-# kilometrage_inst = requests.get(url_kilometrage)
-# pression_inst = requests.get(url_pression_pneu)
-# frein_inst = requests.get(url_frein)
+kilometrage_inst = requests.get(url_kilometrage)
+pression_inst = requests.get(url_pression_pneu)
+frein_inst = requests.get(url_frein)
 
-# # Get .oml files
-# # Consumption
-# p = subprocess.Popen(['scp',
-#                       'riotp6@lille.iot-lab.info:~/.iot-lab/last/consumption/*.oml',
-#                       './conso'])
-# sts = p.wait()
+# Get .oml files
+# Consumption
+p = subprocess.Popen(['scp',
+                      'riotp6@lille.iot-lab.info:~/.iot-lab/last/consumption/*.oml',
+                      './conso'])
+sts = p.wait()
 
-# # RSSI on channel 15
-# p = subprocess.Popen(['scp',
-#                       'riotp6@lille.iot-lab.info:~/.iot-lab/last/radio/*.oml',
-#                       './radio'])
-# sts = p.wait()
+# RSSI on channel 15
+p = subprocess.Popen(['scp',
+                      'riotp6@lille.iot-lab.info:~/.iot-lab/last/radio/*.oml',
+                      './radio'])
+sts = p.wait()
 
 
 #################### Consumption #############################################
