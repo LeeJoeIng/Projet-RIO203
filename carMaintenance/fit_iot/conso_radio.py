@@ -190,6 +190,6 @@ for i in range(len(tsrssi_frein)) :
     #print(response)
     
 for i in range(len(tsrssi_pneu)) :
-    data_rssi = '{\"ts\":' + str(int(tsrssi_pneu[i])) + "000" + '{,\"values\":\"rssi_tire\":' + str(rssi_pneu[i]) + '}}'
+    data_rssi = '{\"ts\":' + str(int(tsrssi_pneu[i])) + "000" + ',\"values\":\"rssi_tire\":' + str(rssi_pneu[i]) + '}}'
     response = requests.post(url_post, headers = header_post, data = data_rssi)
     #print(response)
