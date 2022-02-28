@@ -21,11 +21,11 @@ print("timestamp max. = " + str(date_max))
 ###### GET measurement data from the Fit IoT sensor nde & POST to Thingsboard ######
 
 # Fit IoT URL 
-# url_fitiot = 'http://[2001:660:4403:486::1057]' #node m3_150, Lille
+url_fitiot = 'http://[2001:660:4403:486::1057]' #node m3_150, Lille
 
-# response = requests.get(url_fitiot)
-# tire_fitiot = float(response.text)
-# print(tire_fitiot)
+response = requests.get(url_fitiot)
+tire_fitiot = float(response.text)
+print(tire_fitiot)
 
 ############################## Get the JWT TOKEN ##################################
 header = {
@@ -58,26 +58,26 @@ response = requests.get(url_last_tire, headers = header)
 response_json = response.json()
 
 # Parse the json response
-# for key in response_json['tire']:
-#     last_tire = float(key['value'])
+for key in response_json['tire']:
+     last_tire = float(key['value'])
 
-# # Difference between the sensor value (simulated) and the last telemetry
-# print(last_tire)
-# delta = tire_fitiot - last_tire 
+ # Difference between the sensor value (simulated) and the last telemetry
+print(last_tire)
+delta = tire_fitiot - last_tire 
 
-# # apply the offset
-# tire_fitiot = tire_fitiot - delta
+# apply the offset
+tire_fitiot = tire_fitiot - delta
 
 ################## POST the value to Thingsboard ####################
-# url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
+url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
 
-# header_post = {
-#             'Content-type': 'application/json',
-# }
+header_post = {
+            'Content-type': 'application/json',
+}
 
-# data_fitiot = '{\"tire\":' + str(tire_fitiot) + '}'
+data_fitiot = '{\"tire\":' + str(tire_fitiot) + '}'
 
-# response = requests.post(url_post, headers = header_post, data = data_fitiot)
+response = requests.post(url_post, headers = header_post, data = data_fitiot)
 
 """ End of the simulation part """
 

@@ -10,7 +10,6 @@ import numpy as np
 import requests
 
 from datetime import datetime, timezone, timedelta
-
 from sklearn.metrics import mean_squared_error
 
 # Calculate maximum and minimum timestamp allowed
@@ -21,10 +20,10 @@ print("timestamp max. = " + str(date_max))
 
 #### GET measurement data from the Fit IoT sensor nde & POST to Thingsboard ###
 
-# url_fitiot = 'http://[2001:660:4403:486::a173]' #m3_152
+url_fitiot = 'http://[2001:660:4403:486::a173]' #m3_152
 
-# response = requests.get(url_fitiot)
-# oil_fitiot = float(response.text)
+response = requests.get(url_fitiot)
+oil_fitiot = float(response.text)
 
 ############################## Get the JWT TOKEN ##############################
 header = {
@@ -58,22 +57,22 @@ response_json = response.json()
 for key in response_json['oil']:
     last_oil = float(key['value'])
 
-# # Difference between the sensor value (simulated) and the last telemetry
-# delta = oil_fitiot - last_oil
+# Difference between the sensor value (simulated) and the last telemetry
+delta = oil_fitiot - last_oil
 
-# # Apply the offset
-# oil_fitiot = oil_fitiot - delta
+# Apply the offset
+oil_fitiot = oil_fitiot - delta
 
 ################## POST the value to Thingsboard ####################
-# url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
+url_post = 'http://localhost:8080/api/v1/vmWsSYMqGg8AGCiamhM9/telemetry'
 
-# header_post = {
-#             'Content-type': 'application/json',
-# }
+header_post = {
+            'Content-type': 'application/json',
+}
 
-# data_fitiot = '{\"oil\":' + str(oil_fitiot) + '}'
+data_fitiot = '{\"oil\":' + str(oil_fitiot) + '}'
 
-# response = requests.post(url_post, headers = header_post, data = data_fitiot)
+response = requests.post(url_post, headers = header_post, data = data_fitiot)
 
 ####### GET thingsboard telemetry, from the last inflation until now ##########
 headers = {
